@@ -1,16 +1,10 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { getAuth, signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth";
+import { app } from './index';
 
-const auth = getAuth();
+const auth = getAuth(app);
+
 const provider = new GoogleAuthProvider();
 
-// Iniciar sesión con popup
-export const loginWithGoogle = () => {
-  return signInWithPopup(auth, provider);
-};
-
-// Cerrar sesión
-export const logout = () => {
-  return signOut(auth);
-};
-
+export const loginWithGoogle = () => signInWithPopup(auth, provider);
+export const logout = () => signOut(auth);
 export { auth };
