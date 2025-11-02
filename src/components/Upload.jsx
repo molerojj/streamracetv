@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
 import { loginWithGoogle, logout } from '../utils/auth';
 import { db } from '../firebase';
@@ -34,13 +35,35 @@ const UploadPage = () => {
     fetchRevistas();
   };
 
+  const extractDriveId = (url) => {
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+    return match ? match[1] : null;
+  };
+
   const handleAdd = async (e) => {
     e.preventDefault();
-    if (titulo && id_archivo) {
-      await addDoc(collection(db, 'revistas'), { titulo, id_archivo });
+
+    // ✅ Extraer solo el ID del link
+    const extractedId = extractDriveId(id_archivo);
+
+    if (!titulo || !extractedId) {
+      toast.error('Título o ID no válido');
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, 'revistas'), {
+        titulo,
+        id_archivo: extractedId,
+      });
+
+      toast.success('Revista agregada correctamente');
       setTitulo('');
       setId_archivo('');
       fetchRevistas();
+    } catch (error) {
+      toast.error('Error al agregar la revista');
+      console.error('Error:', error);
     }
   };
 
