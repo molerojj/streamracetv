@@ -32,6 +32,7 @@ const UploadPage = () => {
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, 'revistas', id));
+    toast.success('Revista eliminada');
     fetchRevistas();
   };
 
@@ -69,12 +70,30 @@ const UploadPage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center text-center px-4 bg-neutral-950 text-white">
+        {/* Logo */}
+        <img
+          src="/isoazul.png"
+          alt="Logo SRTV"
+          className="w-60 mb-6 drop-shadow-xl"
+        />
+
+        {/* Título */}
+        <h1 className="text-2xl sm:text-3xl font-bold mb-8 tracking-wide">
+          Panel Admin SRTV
+        </h1>
+
+        {/* Botón de login con icono Google */}
         <button
           onClick={loginWithGoogle}
-          className="px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+          className="flex items-center gap-3 bg-white text-black font-semibold px-5 py-3 rounded-lg shadow-md hover:bg-gray-200 transition"
         >
-          Ingresar con Google
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          Iniciar sesión con Google
         </button>
       </div>
     );
@@ -98,7 +117,18 @@ const UploadPage = () => {
 
   return (
     <div className="max-w-3xl px-4 mx-auto py-10 text-white">
-      <h1 className="text-3xl font-semibold mb-6">Panel de administración</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-semibold">Admin Revistas SRTV</h1>
+        <div className="text-right">
+          <p className="text-sm text-neutral-400 mb-1">{user?.email}</p>
+          <button
+            onClick={logout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+    </div>
 
       <form onSubmit={handleAdd} className="space-y-4 mb-10">
         <input

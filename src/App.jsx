@@ -18,7 +18,7 @@ const Layout = () => {
   const location = useLocation();
 
   // Rutas donde NO mostrar el Navbar
-  const hideNavbarRoutes = ['/transmision'];
+  const hideNavbarRoutes = ['/transmision', '/upload'];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
