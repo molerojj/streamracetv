@@ -19,3 +19,5 @@ export const provider = new GoogleAuthProvider();
 
 export const loginWithGoogle = () => signInWithPopup(auth, provider);
 export const logout = () => signOut(auth);
+
+export { app };
