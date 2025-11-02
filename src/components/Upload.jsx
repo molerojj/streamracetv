@@ -133,6 +133,9 @@ const UploadPage = () => {
           </button>
         </div>
     </div>
+      <p className="text-xl mb-4">
+        Total revistas: <span className="font-bold text-yellow-400">{revistas.length}</span>
+      </p>
 
       <form onSubmit={handleAdd} className="space-y-4 mb-10">
         <input
@@ -160,23 +163,22 @@ const UploadPage = () => {
       </form>
 
       <div className="space-y-4">
-        {revistas.map((r) => (
-          <div
-            key={r.id}
-            className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg"
-          >
-            <div>
-              <p className="font-bold">{r.titulo}</p>
-              <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
-            </div>
-            <button
-              onClick={() => handleDelete(r.id)}
-              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white"
-            >
-              Eliminar
-            </button>
-          </div>
-        ))}
+{revistas.map((r, index) => (
+  <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
+    <div>
+      <p className="font-bold">
+        <span className="text-yellow-400 mr-2">#{index + 1}</span> {r.titulo}
+      </p>
+      <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
+    </div>
+    <button
+      onClick={() => handleDelete(r.id)}
+      className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white"
+    >
+      Eliminar
+    </button>
+  </div>
+))}
       </div>
     </div>
   );
