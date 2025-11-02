@@ -17,7 +17,7 @@ const UploadPage = () => {
   const [id_archivo, setId_archivo] = useState('');
   
   // Lista blanca de emails autorizados
-  const whiteList = ['tucorreo@gmail.com', 'admin@gmail.com'];
+  const whiteList = ['molerojj@gmail.com'];
 
   const fetchRevistas = async () => {
     const snapshot = await getDocs(collection(db, 'revistas'));
