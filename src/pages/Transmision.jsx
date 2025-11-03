@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import logoRunner from '../assets/logo_runner.png'
 import Bannerpublicidad from '../components/Bannerpublicidad'
-import URL from '../constants/url';
 
 import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -24,6 +23,20 @@ const Transmision = () => {
     });
     return formato.charAt(0).toUpperCase() + formato.slice(1);
   };
+  
+  const [urlTransmision, setUrlTransmision] = useState('');
+
+  useEffect(() => {
+    const fetchUrl = async () => {
+      const docRef = doc(db, 'config', 'url_transmision');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setUrlTransmision(docSnap.data().valor);
+      }
+    };
+
+    fetchUrl();
+  }, []);
 
   useEffect(() => {
     const fetchFecha = async () => {
@@ -71,7 +84,7 @@ const Transmision = () => {
         <div className="absolute inset-0 rounded-2xl border-4 border-transparent bg-gradient-to-br from-blue-500 to-purple-700 opacity-40 transition-all duration-500 z-0 blur-3xl" />
         <div className="absolute inset-0 rounded-2xl border border-blue-800 z-10"></div>
           <iframe
-            src={URL}
+            src={urlTransmision}
             width="100%"
             height="100%"
             frameBorder="0"

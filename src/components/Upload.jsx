@@ -18,6 +18,7 @@ const UploadPage = () => {
   const [revistas, setRevistas] = useState([]);
   const [titulo, setTitulo] = useState('');
   const [id_archivo, setId_archivo] = useState('');
+  const [urlTransmision, setUrlTransmision] = useState('');
   
   // Lista blanca de emails autorizados
   const whiteList = ['molerojj@gmail.com'];
@@ -47,6 +48,17 @@ const UploadPage = () => {
   useEffect(() => {
     if (user) fetchRevistas();
   }, [user]);
+
+  useEffect(() => {
+    const fetchUrl = async () => {
+      const docRef = doc(db, 'config', 'url_transmision');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setUrlTransmision(docSnap.data().valor);
+      }
+    };
+    fetchUrl();
+  }, []);
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, 'revistas', id));
@@ -183,6 +195,41 @@ const UploadPage = () => {
           className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
         >
           Guardar fecha
+        </button>
+      </form>
+
+      {/* Form para modificar URL de transmision */}
+
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          try {
+            await setDoc(doc(db, 'config', 'url_transmision'), {
+              valor: urlTransmision,
+            });
+            toast.success('URL de transmisión actualizada');
+          } catch (error) {
+            toast.error('Error al guardar la URL');
+            console.error(error);
+          }
+        }}
+        className="mb-10"
+      >
+        <label className="text-sm block mb-2 text-neutral-300">
+          URL de transmisión
+        </label>
+        <input
+          type="text"
+          value={urlTransmision}
+          onChange={(e) => setUrlTransmision(e.target.value)}
+          placeholder="https://player.vimeo.com/..."
+          className="bg-neutral-800 text-white px-4 py-2 rounded mb-4 w-full sm:w-[500px]"
+        />
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+        >
+          Guardar URL
         </button>
       </form>
 
