@@ -9,6 +9,8 @@ import {
   deleteDoc,
   addDoc,
   doc,
+  getDoc, 
+  setDoc
 } from 'firebase/firestore';
 
 const UploadPage = () => {
@@ -26,17 +28,20 @@ const UploadPage = () => {
     setRevistas(docs);
   };
 
-const [fechaJornada, setFechaJornada] = useState('');
+  const [fechaJornada, setFechaJornada] = useState('');
 
   useEffect(() => {
     const fetchFecha = async () => {
       const docRef = doc(db, 'config', 'fecha_jornada');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setFechaJornada(docSnap.data().valor);
+        const valorFecha = docSnap.data().valor;
+        setFechaJornada(valorFecha);
       }
     };
+
     fetchFecha();
+    fetchRevistas();
   }, []);
 
   useEffect(() => {
@@ -152,22 +157,31 @@ const [fechaJornada, setFechaJornada] = useState('');
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          await setDoc(doc(db, 'config', 'fecha_jornada'), { valor: fechaJornada });
-          toast.success('Fecha actualizada');
+          try {
+            await setDoc(doc(db, 'config', 'fecha_jornada'), {
+              valor: fechaJornada,
+            });
+            toast.success('Fecha actualizada correctamente');
+          } catch (error) {
+            toast.error('Error al guardar la fecha');
+            console.error(error);
+          }
         }}
         className="mb-10"
       >
-        <p className="text-xl mb-4">
-          Modificar fecha de Revistas
-        </p>
-        
+        <label className="text-sm block mb-2 text-neutral-300">
+          Fecha de la jornada
+        </label>
         <input
           type="date"
           value={fechaJornada}
           onChange={(e) => setFechaJornada(e.target.value)}
-          className="bg-neutral-800 text-white px-4 py-2 rounded mb-4"
+          className="bg-neutral-800 text-white px-4 py-2 rounded mb-4 w-full sm:w-[250px]"
         />
-        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+        >
           Guardar fecha
         </button>
       </form>
