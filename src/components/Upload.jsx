@@ -26,6 +26,19 @@ const UploadPage = () => {
     setRevistas(docs);
   };
 
+const [fechaJornada, setFechaJornada] = useState('');
+
+  useEffect(() => {
+    const fetchFecha = async () => {
+      const docRef = doc(db, 'config', 'fecha_jornada');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setFechaJornada(docSnap.data().valor);
+      }
+    };
+    fetchFecha();
+  }, []);
+
   useEffect(() => {
     if (user) fetchRevistas();
   }, [user]);
@@ -133,8 +146,36 @@ const UploadPage = () => {
           </button>
         </div>
     </div>
+
+      {/* Fecha dinamica de revistas */}
+
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await setDoc(doc(db, 'config', 'fecha_jornada'), { valor: fechaJornada });
+          toast.success('Fecha actualizada');
+        }}
+        className="mb-10"
+      >
+        <p className="text-xl mb-4">
+          Modificar fecha de Revistas
+        </p>
+        
+        <input
+          type="date"
+          value={fechaJornada}
+          onChange={(e) => setFechaJornada(e.target.value)}
+          className="bg-neutral-800 text-white px-4 py-2 rounded mb-4"
+        />
+        <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          Guardar fecha
+        </button>
+      </form>
+
+      {/* Form agregar revistas */}
+
       <p className="text-xl mb-4">
-        Total revistas: <span className="font-bold text-yellow-400">{revistas.length}</span>
+        Agregar nueva revista
       </p>
 
       <form onSubmit={handleAdd} className="space-y-4 mb-10">
@@ -162,23 +203,27 @@ const UploadPage = () => {
         </button>
       </form>
 
-      <div className="space-y-4">
-{revistas.map((r, index) => (
-  <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
-    <div>
-      <p className="font-bold">
-        <span className="text-yellow-400 mr-2">#{index + 1}</span> {r.titulo}
+      <p className="text-xl mb-4">
+        Total revistas: <span className="font-bold text-yellow-400">{revistas.length}</span>
       </p>
-      <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
-    </div>
-    <button
-      onClick={() => handleDelete(r.id)}
-      className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white"
-    >
-      Eliminar
-    </button>
-  </div>
-))}
+
+      <div className="space-y-4">
+        {revistas.map((r, index) => (
+          <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
+            <div>
+              <p className="font-bold">
+                <span className="text-yellow-400 mr-2">#{index + 1}</span> {r.titulo}
+              </p>
+              <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
+            </div>
+            <button
+              onClick={() => handleDelete(r.id)}
+              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white"
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

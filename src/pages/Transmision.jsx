@@ -6,12 +6,35 @@ import logoRunner from '../assets/logo_runner.png'
 import Bannerpublicidad from '../components/Bannerpublicidad'
 import URL from '../constants/url';
 
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const Transmision = () => {
 
   const [revistas, setRevistas] = useState([]);
+  const [fechaJornada, setFechaJornada] = useState('');
+
+  const formatFechaJornada = (fechaISO) => {
+    const fecha = new Date(fechaISO + 'T12:00:00'); // ⚠️ Corrige desfase por zona horaria
+    const formato = fecha.toLocaleDateString("es-ES", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    return formato.charAt(0).toUpperCase() + formato.slice(1);
+  };
+
+  useEffect(() => {
+    const fetchFecha = async () => {
+      const docRef = doc(db, 'config', 'fecha_jornada');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setFechaJornada(docSnap.data().valor);
+      }
+    };
+    fetchFecha();
+  }, []);
 
   useEffect(() => {
     const fetchRevistas = async () => {
@@ -100,8 +123,9 @@ const Transmision = () => {
         Revistas de la jornada
         </h2>
         <p className="text-center text-neutral-400 mb-12">
-        {/* Puedes tomar esta fecha desde Firebase en el futuro */}
-        Martes 28 de Octubre de 2025
+          {fechaJornada
+            ? formatFechaJornada(fechaJornada)
+            : 'Cargando...'}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 justify-items-center">
           {revistas.map((file, index) => (
