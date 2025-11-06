@@ -13,9 +13,9 @@ const Transmision = () => {
   const [revistas, setRevistas] = useState([]);
   const [fechaJornada, setFechaJornada] = useState('');
 
-  const formatFechaJornada = (fechaISO) => {
-    const fecha = new Date(fechaISO + 'T12:00:00'); // ⚠️ Corrige desfase por zona horaria
-    const formato = fecha.toLocaleDateString("es-ES", {
+  const formatFechaJornada = (fecha) => {
+    const fechaObj = new Date(`${fecha}T12:00:00`);
+    const formato = fechaObj.toLocaleDateString("es-ES", {
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -142,29 +142,31 @@ const Transmision = () => {
         </p>
         <div className="flex flex-wrap justify-center gap-8">
           {revistas.map((file, index) => (
-            <div
-              key={index}
-              className="relative h-full w-full max-w-[200px] bg-neutral-900/70 p-6 rounded-2xl border border-white/10 shadow-lg overflow-hidden"
-            >
-              {/* Fondo decorativo en capa atrás */}
-              <div className="absolute inset-0 bg-[url('/isoazul.png')] bg-center bg-no-repeat bg-contain opacity-30 pointer-events-none z-0" />
+          <div
+            key={index}
+            className="relative w-full max-w-[200px] min-h-[210px] bg-neutral-900/70 p-6 rounded-2xl border border-white/10 shadow-lg overflow-hidden flex flex-col justify-between"
+          >
+            {/* Fondo decorativo en capa atrás */}
+            <div className="absolute inset-0 bg-[url('/isoazul.png')] bg-center bg-no-repeat bg-contain opacity-30 pointer-events-none z-0" />
 
-              {/* Contenido de la tarjeta */}
-              <div className="relative z-10 h-full flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-bold mb-4 uppercase text-center">{file.titulo}</h3>
-                </div>
-                <a
-                  href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 flex items-center justify-center gap-2 bg-custom-purple text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
-                >
-                  <Download size={20} />
-                  Descargar
-                </a>
+            {/* Contenido */}
+            <div className="relative z-10 flex flex-col justify-between flex-1">
+              <div className="mb-4">
+                <h3 className="text-xl font-bold uppercase text-center leading-tight break-words">
+                  {file.titulo}
+                </h3>
               </div>
+              <a
+                href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-custom-purple text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+              >
+                <Download size={20} />
+                Descargar
+              </a>
             </div>
+          </div>
           ))}
         </div>
       </div>
