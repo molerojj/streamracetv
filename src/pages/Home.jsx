@@ -1,6 +1,5 @@
 import React from 'react';
 import HeroSection from '../components/HeroSection';
-// import FeatureSection from '../components/FeatureSection';
 import Services from '../components/Services';
 import Publicidad from '../components/Publicidad';
 import BackToTopButton from '../components/BackToTopButton';
@@ -11,9 +10,6 @@ const Home = () => {
     <>
       <HeroSection />
       <div className="max-w-7xl mx-auto pt-20 px-6 scroll-smooth">
-        {/* <div id="sobre">
-          <FeatureSection />
-        </div> */}
         <div id="servicios">
           <Services />
         </div>
