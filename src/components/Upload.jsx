@@ -21,7 +21,7 @@ const UploadPage = () => {
   const [urlTransmision, setUrlTransmision] = useState('');
   
   // Lista blanca de emails autorizados
-  const whiteList = ['molerojj@gmail.com'];
+  const whiteList = ['molerojj@gmail.com', 'streamracetv6@gmail.com', 'edgaraluboGIT ADD@gmail.com'];
 
   const fetchRevistas = async () => {
     const snapshot = await getDocs(collection(db, 'revistas'));
