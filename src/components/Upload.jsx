@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
 import { loginWithGoogle, logout } from '../utils/auth';
+import { isAuthorized } from '../utils/isAuthorized';
 import { db } from '../firebase';
 import {
   collection,
@@ -19,9 +20,7 @@ const UploadPage = () => {
   const [titulo, setTitulo] = useState('');
   const [id_archivo, setId_archivo] = useState('');
   const [urlTransmision, setUrlTransmision] = useState('');
-  
-  // Lista blanca de emails autorizados
-  const whiteList = ['molerojj@gmail.com', 'streamracetv6@gmail.com', 'edgaraluboGIT ADD@gmail.com'];
+  const [autorizado, setAutorizado] = useState(null);
 
   const fetchRevistas = async () => {
     const snapshot = await getDocs(collection(db, 'revistas'));
@@ -30,6 +29,16 @@ const UploadPage = () => {
   };
 
   const [fechaJornada, setFechaJornada] = useState('');
+
+  useEffect(() => {
+  const verificarAcceso = async () => {
+    if (user) {
+      const acceso = await isAuthorized(user.email);
+      setAutorizado(acceso);
+    }
+  };
+  verificarAcceso();
+}, [user]);
 
   useEffect(() => {
     const fetchFecha = async () => {
@@ -129,11 +138,20 @@ const UploadPage = () => {
     );
   }
 
-  if (!whiteList.includes(user.email)) {
+  if (autorizado === null) {
+    // Todavía se está verificando el acceso autorizado
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <p>Verificando acceso...</p>
+      </div>
+    );
+  }
+
+  if (autorizado === false) {
     return (
       <div className="min-h-screen flex items-center justify-center text-center">
         <div>
-          <p className="text-2xl font-bold">Acceso denegado</p>
+          <p className="text-2xl font-bold">⚠️ Acceso denegado</p>
           <button
             onClick={logout}
             className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md"
