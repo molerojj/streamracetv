@@ -5,7 +5,7 @@ import { MapPin, Tv,
   CheckCircle2, } from "lucide-react";
 
 export const navItems = [
-  { label: "Steam Race TV", href: "#servicios" },
+  { label: "Stream Race TV", href: "#servicios" },
   { label: "Publicidad", href: "#publicidad" },
 ];
 
