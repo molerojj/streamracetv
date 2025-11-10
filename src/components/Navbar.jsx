@@ -31,6 +31,24 @@ const Navbar = () => {
                 <div className="hidden lg:flex justify-center space-x-12 items-center">
                     <a href="https://wa.link/8g3t92" target='_blank' className="py-2 px-3 border rounded-md">Contáctanos</a>
                     <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" target='_blank' className="bg-custom-purple py-2 px-3 rounded-md">Únete al canal de WhatsApp</a>
+                    <Link to="/upload" target="_blank" title="Panel Admin">
+                    <div className="p-2 rounded-full hover:bg-neutral-800 transition-colors">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-white hover:text-blue-500"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        >
+                        <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
+                        <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    </Link>
                 </div>
                 <div className="lg:hidden md:flex flex-col justify-end">
                     <button onClick={toggleNavbar} >
