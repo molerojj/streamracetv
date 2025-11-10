@@ -16,15 +16,17 @@ const App = () => {
 
 const Layout = () => {
   const location = useLocation();
+  const path = location.pathname;
 
-  // Rutas donde NO mostrar Navbar y Footer
-  const hideHeaderFooterRoutes = ['/upload'];
+  // Mostrar Navbar solo en la ruta raíz
+  const showNavbar = path === '/';
 
-  const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(location.pathname);
+  // Mostrar Footer en / y /transmision
+  const showFooter = path === '/' || path === '/transmision';
 
   return (
     <>
-      {!shouldHideHeaderFooter && <Navbar />}
+      {showNavbar && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,7 +34,7 @@ const Layout = () => {
         <Route path="/upload" element={<UploadPage />} />
       </Routes>
 
-      {!shouldHideHeaderFooter && <Footer />}
+      {showFooter && <Footer />}
     </>
   );
 };
