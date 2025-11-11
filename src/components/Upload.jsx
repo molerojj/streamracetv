@@ -30,15 +30,31 @@ const UploadPage = () => {
 
   const [fechaJornada, setFechaJornada] = useState('');
 
-  useEffect(() => {
-  const verificarAcceso = async () => {
-    if (user) {
-      const acceso = await isAuthorized(user.email);
-      setAutorizado(acceso);
+  const [editandoId, setEditandoId] = useState(null);
+  const [nuevoTitulo, setNuevoTitulo] = useState('');
+
+  const handleUpdateTitulo = async (id, nuevoTitulo) => {
+    try {
+      await setDoc(doc(db, 'revistas', id), { titulo: nuevoTitulo }, { merge: true });
+      toast.success('Título actualizado');
+      setEditandoId(null);
+      setNuevoTitulo('');
+      fetchRevistas();
+    } catch (error) {
+      toast.error('Error al actualizar el título');
+      console.error(error);
     }
   };
-  verificarAcceso();
-}, [user]);
+
+  useEffect(() => {
+    const verificarAcceso = async () => {
+      if (user) {
+        const acceso = await isAuthorized(user.email);
+        setAutorizado(acceso);
+      }
+    };
+    verificarAcceso();
+  }, [user]);
 
   useEffect(() => {
     const fetchFecha = async () => {
@@ -270,7 +286,7 @@ const UploadPage = () => {
           type="text"
           value={id_archivo}
           onChange={(e) => setId_archivo(e.target.value)}
-          placeholder="ID del archivo de Google Drive"
+          placeholder="Inserta URL de revista compartida por Google Drive"
           className="w-full p-3 rounded bg-neutral-800 text-white"
           required
         />
@@ -287,22 +303,68 @@ const UploadPage = () => {
       </p>
 
       <div className="space-y-4">
-        {revistas.map((r, index) => (
-          <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
-            <div>
-              <p className="font-bold">
-                <span className="text-yellow-400 mr-2">#{index + 1}</span> {r.titulo}
-              </p>
-              <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
-            </div>
-            <button
-              onClick={() => handleDelete(r.id)}
-              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white"
-            >
-              Eliminar
-            </button>
-          </div>
-        ))}
+{revistas.map((r, index) => (
+  <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
+    <div>
+      <p className="font-bold">
+        <span className="text-yellow-400 mr-2">#{index + 1}</span>
+
+        {editandoId === r.id ? (
+          <input
+            type="text"
+            className="bg-neutral-700 text-white px-2 py-1 rounded w-full"
+            value={nuevoTitulo}
+            onChange={(e) => setNuevoTitulo(e.target.value)}
+          />
+        ) : (
+          r.titulo
+        )}
+      </p>
+
+      <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
+    </div>
+
+    <div className="flex gap-2">
+      {editandoId === r.id ? (
+        <>
+          <button
+            onClick={() => handleUpdateTitulo(r.id, nuevoTitulo)}
+            className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
+          >
+            Guardar
+          </button>
+          <button
+            onClick={() => {
+              setEditandoId(null);
+              setNuevoTitulo('');
+            }}
+            className="bg-gray-600 hover:bg-gray-700 px-3 py-1 rounded text-white text-sm"
+          >
+            Cancelar
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            onClick={() => {
+              setEditandoId(r.id);
+              setNuevoTitulo(r.titulo);
+            }}
+            className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-white text-sm"
+          >
+            Editar
+          </button>
+          <button
+            onClick={() => handleDelete(r.id)}
+            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-sm"
+          >
+            Eliminar
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+))}
       </div>
     </div>
   );
