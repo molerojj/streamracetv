@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import bgHero from '../assets/bghero.jpg';
 import { AuthContext } from '../context/AuthContext';
 import { loginWithGoogle, logout } from '../utils/auth';
 import { isAuthorized } from '../utils/isAuthorized';
@@ -180,191 +181,201 @@ const UploadPage = () => {
   }
 
   return (
-    <div className="max-w-3xl px-4 mx-auto py-10 text-white">
-      <div className="flex items-center justify-between mb-6">
-        <img
-          src="/isoazul.png"
-          alt="Logo SRTV"
-          className="w-60 mb-6 drop-shadow-xl"
-        />
-        <h1 className="text-3xl font-semibold">Admin SRTV</h1>
-        <div className="text-right">
-          <button
-            onClick={logout}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
-          >
-            Cerrar sesión
-          </button>
-        </div>
-    </div>
+    <div className="w-full relative px-4 mx-auto py-10 text-white"
+      style={{
+        backgroundImage: `url(${bgHero})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="absolute inset-0 bg-black/20 z-0 backdrop-blur-sm" />
 
-      {/* Fecha dinamica de revistas */}
+      <div className="relative z-10 max-w-3xl px-4 mx-auto py-10 text-white">
+        <div className="flex items-center justify-between mb-6">
+          <img
+            src="/isoazul.png"
+            alt="Logo SRTV"
+            className="w-60 mb-6 drop-shadow-xl"
+            />
+          <h1 className="text-3xl font-semibold">Admin SRTV</h1>
+          <div className="text-right">
+            <button
+              onClick={logout}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+            >
+              Cerrar sesión
+            </button>
+          </div>
+      </div>
 
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          try {
-            await setDoc(doc(db, 'config', 'fecha_jornada'), {
-              valor: fechaJornada,
-            });
-            toast.success('Fecha actualizada correctamente');
-          } catch (error) {
-            toast.error('Error al guardar la fecha');
-            console.error(error);
-          }
-        }}
-        className="mb-10"
-      >
-        <label className="text-sm block mb-2 text-neutral-300">
-          Fecha de la jornada
-        </label>
-        <input
-          type="date"
-          value={fechaJornada}
-          onChange={(e) => setFechaJornada(e.target.value)}
-          className="bg-neutral-800 text-white px-4 py-2 rounded mb-4 w-full sm:w-[250px]"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+        {/* Fecha dinamica de revistas */}
+
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              await setDoc(doc(db, 'config', 'fecha_jornada'), {
+                valor: fechaJornada,
+              });
+              toast.success('Fecha actualizada correctamente');
+            } catch (error) {
+              toast.error('Error al guardar la fecha');
+              console.error(error);
+            }
+          }}
+          className="mb-10"
         >
-          Guardar fecha
-        </button>
-      </form>
-
-      {/* Form para modificar URL de transmision */}
-
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          try {
-            await setDoc(doc(db, 'config', 'url_transmision'), {
-              valor: urlTransmision,
-            });
-            toast.success('URL de transmisión actualizada');
-          } catch (error) {
-            toast.error('Error al guardar la URL');
-            console.error(error);
-          }
-        }}
-        className="mb-10"
-      >
-        <label className="text-sm block mb-2 text-neutral-300">
-          URL de transmisión
-        </label>
-        <input
-          type="text"
-          value={urlTransmision}
-          onChange={(e) => setUrlTransmision(e.target.value)}
-          placeholder="https://player.vimeo.com/..."
-          className="bg-neutral-800 text-white px-4 py-2 rounded mb-4 w-full sm:w-[500px]"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
-        >
-          Guardar URL
-        </button>
-      </form>
-
-      {/* Form agregar revistas */}
-
-      <p className="text-xl mb-4">
-        Agregar nueva revista
-      </p>
-
-      <form onSubmit={handleAdd} className="space-y-4 mb-10">
-        <input
-          type="text"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-          placeholder="Título de la revista"
-          className="w-full p-3 rounded bg-neutral-800 text-white"
-          required
-        />
-        <input
-          type="text"
-          value={id_archivo}
-          onChange={(e) => setId_archivo(e.target.value)}
-          placeholder="Inserta URL de revista compartida por Google Drive"
-          className="w-full p-3 rounded bg-neutral-800 text-white"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded-lg text-white"
-        >
-          Agregar revista
-        </button>
-      </form>
-
-      <p className="text-xl mb-4">
-        Total revistas: <span className="font-bold text-yellow-400">{revistas.length}</span>
-      </p>
-
-      <div className="space-y-4">
-{revistas.map((r, index) => (
-  <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
-    <div>
-      <p className="font-bold">
-        <span className="text-yellow-400 mr-2">#{index + 1}</span>
-
-        {editandoId === r.id ? (
+          <label className="text-sm block mb-2 text-neutral-300">
+            Fecha de la jornada
+          </label>
           <input
+            type="date"
+            value={fechaJornada}
+            onChange={(e) => setFechaJornada(e.target.value)}
+            className="bg-neutral-800 text-white px-4 py-2 rounded mb-4 w-full sm:w-[250px]"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+            >
+            Guardar fecha
+          </button>
+        </form>
+
+        {/* Form para modificar URL de transmision */}
+
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              await setDoc(doc(db, 'config', 'url_transmision'), {
+                valor: urlTransmision,
+              });
+              toast.success('URL de transmisión actualizada');
+            } catch (error) {
+              toast.error('Error al guardar la URL');
+              console.error(error);
+            }
+          }}
+          className="mb-10"
+        >
+          <label className="text-sm block mb-2 text-neutral-300">
+            URL de transmisión
+          </label>
+          <input
+            type="text"
+            value={urlTransmision}
+            onChange={(e) => setUrlTransmision(e.target.value)}
+            placeholder="https://player.vimeo.com/..."
+            className="bg-neutral-800 text-white px-4 py-2 rounded mb-4 w-full sm:w-[500px]"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+          >
+            Guardar URL
+          </button>
+        </form>
+
+        {/* Form agregar revistas */}
+
+        <p className="text-xl mb-4">
+          Agregar nueva revista
+        </p>
+
+        <form onSubmit={handleAdd} className="space-y-4 mb-10">
+          <input
+            type="text"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            placeholder="Título de la revista"
+            className="w-full p-3 rounded bg-neutral-800 text-white"
+            required
+            />
+          <input
+            type="text"
+            value={id_archivo}
+            onChange={(e) => setId_archivo(e.target.value)}
+            placeholder="Inserta URL de revista compartida por Google Drive"
+            className="w-full p-3 rounded bg-neutral-800 text-white"
+            required
+          />
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded-lg text-white"
+          >
+            Agregar revista
+          </button>
+        </form>
+
+        <p className="text-xl mb-4">
+          Total revistas: <span className="font-bold text-yellow-400">{revistas.length}</span>
+        </p>
+
+        <div className="space-y-4">
+  {revistas.map((r, index) => (
+    <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
+      <div>
+        <p className="font-bold">
+          <span className="text-yellow-400 mr-2">#{index + 1}</span>
+
+          {editandoId === r.id ? (
+            <input
             type="text"
             className="bg-neutral-700 text-white px-2 py-1 rounded w-full"
             value={nuevoTitulo}
             onChange={(e) => setNuevoTitulo(e.target.value)}
-          />
+            />
+          ) : (
+            r.titulo
+          )}
+        </p>
+
+        <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
+      </div>
+
+      <div className="flex gap-2">
+        {editandoId === r.id ? (
+          <>
+            <button
+              onClick={() => handleUpdateTitulo(r.id, nuevoTitulo)}
+              className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
+              >
+              Guardar
+            </button>
+            <button
+              onClick={() => {
+                setEditandoId(null);
+                setNuevoTitulo('');
+              }}
+              className="bg-gray-600 hover:bg-gray-700 px-3 py-1 rounded text-white text-sm"
+              >
+              Cancelar
+            </button>
+          </>
         ) : (
-          r.titulo
+          <>
+            <button
+              onClick={() => {
+                setEditandoId(r.id);
+                setNuevoTitulo(r.titulo);
+              }}
+              className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-white text-sm"
+              >
+              Editar
+            </button>
+            <button
+              onClick={() => handleDelete(r.id)}
+              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-sm"
+              >
+              Eliminar
+            </button>
+          </>
         )}
-      </p>
-
-      <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
+      </div>
     </div>
-
-    <div className="flex gap-2">
-      {editandoId === r.id ? (
-        <>
-          <button
-            onClick={() => handleUpdateTitulo(r.id, nuevoTitulo)}
-            className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
-          >
-            Guardar
-          </button>
-          <button
-            onClick={() => {
-              setEditandoId(null);
-              setNuevoTitulo('');
-            }}
-            className="bg-gray-600 hover:bg-gray-700 px-3 py-1 rounded text-white text-sm"
-          >
-            Cancelar
-          </button>
-        </>
-      ) : (
-        <>
-          <button
-            onClick={() => {
-              setEditandoId(r.id);
-              setNuevoTitulo(r.titulo);
-            }}
-            className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-white text-sm"
-          >
-            Editar
-          </button>
-          <button
-            onClick={() => handleDelete(r.id)}
-            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-sm"
-          >
-            Eliminar
-          </button>
-        </>
-      )}
-    </div>
-  </div>
-))}
+  ))}
+        </div>
       </div>
     </div>
   );
