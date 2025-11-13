@@ -5,7 +5,7 @@ import logo from '../assets/logo.png';
 import logoRunner from '../assets/logo_runner.png'
 import Bannerpublicidad from '../components/Bannerpublicidad'
 
-import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const Transmision = () => {
@@ -27,38 +27,33 @@ const Transmision = () => {
   const [urlTransmision, setUrlTransmision] = useState('');
 
   useEffect(() => {
-    const fetchUrl = async () => {
-      const docRef = doc(db, 'config', 'url_transmision');
-      const docSnap = await getDoc(docRef);
+    const unsubscribe = onSnapshot(doc(db, 'config', 'url_transmision'), (docSnap) => {
       if (docSnap.exists()) {
-        setUrlTransmision(docSnap.data().valor);
+      setUrlTransmision(docSnap.data().valor);
       }
-    };
-
-    fetchUrl();
+      });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    const fetchFecha = async () => {
-      const docRef = doc(db, 'config', 'fecha_jornada');
-      const docSnap = await getDoc(docRef);
+    const unsubscribe = onSnapshot(doc(db, 'config', 'fecha_jornada'), (docSnap) => {
       if (docSnap.exists()) {
-        setFechaJornada(docSnap.data().valor);
+      setFechaJornada(docSnap.data().valor);
       }
-    };
-    fetchFecha();
+      });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    const fetchRevistas = async () => {
-      const snapshot = await getDocs(collection(db, 'revistas'));
-      const docs = snapshot.docs.map(doc => ({
-      ...doc.data(),
-      id: doc.id
-      }));
-      setRevistas(docs);
-    };
-    fetchRevistas();
+  const unsubscribe = onSnapshot(collection(db, 'revistas'), (snapshot) => {
+  const docs = snapshot.docs.map(doc => ({
+  ...doc.data(),
+  id: doc.id,
+  }));
+  setRevistas(docs);
+  });
+
+  return () => unsubscribe();
   }, []);
 
   return (
