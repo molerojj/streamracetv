@@ -7,12 +7,11 @@ import { isAuthorized } from '../utils/isAuthorized';
 import { db } from '../firebase';
 import {
   collection,
-  getDocs,
   deleteDoc,
   addDoc,
   doc,
-  getDoc, 
-  setDoc
+  setDoc,
+  onSnapshot,
 } from 'firebase/firestore';
 
 const UploadPage = () => {
@@ -22,30 +21,38 @@ const UploadPage = () => {
   const [id_archivo, setId_archivo] = useState('');
   const [urlTransmision, setUrlTransmision] = useState('');
   const [autorizado, setAutorizado] = useState(null);
-
-  const fetchRevistas = async () => {
-    const snapshot = await getDocs(collection(db, 'revistas'));
-    const docs = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-    setRevistas(docs);
-  };
-
   const [fechaJornada, setFechaJornada] = useState('');
-
   const [editandoId, setEditandoId] = useState(null);
   const [nuevoTitulo, setNuevoTitulo] = useState('');
 
-  const handleUpdateTitulo = async (id, nuevoTitulo) => {
-    try {
-      await setDoc(doc(db, 'revistas', id), { titulo: nuevoTitulo }, { merge: true });
-      toast.success('Título actualizado');
-      setEditandoId(null);
-      setNuevoTitulo('');
-      fetchRevistas();
-    } catch (error) {
-      toast.error('Error al actualizar el título');
-      console.error(error);
-    }
-  };
+  // 🔁 Escuchar colección 'revistas' en tiempo real
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'revistas'), (snapshot) => {
+      const docs = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setRevistas(docs);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 🔁 Escuchar config/fecha_jornada y config/url_transmision en tiempo real
+  useEffect(() => {
+    const unsubFecha = onSnapshot(doc(db, 'config', 'fecha_jornada'), (docSnap) => {
+      if (docSnap.exists()) {
+        setFechaJornada(docSnap.data().valor);
+      }
+    });
+
+    const unsubUrl = onSnapshot(doc(db, 'config', 'url_transmision'), (docSnap) => {
+      if (docSnap.exists()) {
+        setUrlTransmision(docSnap.data().valor);
+      }
+    });
+
+    return () => {
+      unsubFecha();
+      unsubUrl();
+    };
+  }, []);
 
   useEffect(() => {
     const verificarAcceso = async () => {
@@ -57,39 +64,21 @@ const UploadPage = () => {
     verificarAcceso();
   }, [user]);
 
-  useEffect(() => {
-    const fetchFecha = async () => {
-      const docRef = doc(db, 'config', 'fecha_jornada');
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const valorFecha = docSnap.data().valor;
-        setFechaJornada(valorFecha);
-      }
-    };
-
-    fetchFecha();
-    fetchRevistas();
-  }, []);
-
-  useEffect(() => {
-    if (user) fetchRevistas();
-  }, [user]);
-
-  useEffect(() => {
-    const fetchUrl = async () => {
-      const docRef = doc(db, 'config', 'url_transmision');
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setUrlTransmision(docSnap.data().valor);
-      }
-    };
-    fetchUrl();
-  }, []);
+  const handleUpdateTitulo = async (id, nuevoTitulo) => {
+    try {
+      await setDoc(doc(db, 'revistas', id), { titulo: nuevoTitulo }, { merge: true });
+      toast.success('Título actualizado');
+      setEditandoId(null);
+      setNuevoTitulo('');
+    } catch (error) {
+      toast.error('Error al actualizar el título');
+      console.error(error);
+    }
+  };
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, 'revistas', id));
     toast.success('Revista eliminada');
-    fetchRevistas();
   };
 
   const extractDriveId = (url) => {
@@ -99,25 +88,19 @@ const UploadPage = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-
-    // ✅ Extraer solo el ID del link
     const extractedId = extractDriveId(id_archivo);
-
     if (!titulo || !extractedId) {
       toast.error('Título o ID no válido');
       return;
     }
-
     try {
       await addDoc(collection(db, 'revistas'), {
         titulo,
         id_archivo: extractedId,
       });
-
       toast.success('Revista agregada correctamente');
       setTitulo('');
       setId_archivo('');
-      fetchRevistas();
     } catch (error) {
       toast.error('Error al agregar la revista');
       console.error('Error:', error);
@@ -127,19 +110,10 @@ const UploadPage = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center px-4 bg-neutral-950 text-white">
-        {/* Logo */}
-        <img
-          src="/isoazul.png"
-          alt="Logo SRTV"
-          className="w-60 mb-6 drop-shadow-xl"
-        />
-
-        {/* Título */}
+        <img src="/isoazul.png" alt="Logo SRTV" className="w-60 mb-6 drop-shadow-xl" />
         <h1 className="text-2xl sm:text-3xl font-bold mb-8 tracking-wide">
           Panel Admin SRTV
         </h1>
-
-        {/* Botón de login con icono Google */}
         <button
           onClick={loginWithGoogle}
           className="flex items-center gap-3 bg-white text-black font-semibold px-5 py-3 rounded-lg shadow-md hover:bg-gray-200 transition"
@@ -156,7 +130,6 @@ const UploadPage = () => {
   }
 
   if (autorizado === null) {
-    // Todavía se está verificando el acceso autorizado
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
         <p>Verificando acceso...</p>
@@ -164,7 +137,7 @@ const UploadPage = () => {
     );
   }
 
-  if (autorizado === false) {
+  if (!autorizado) {
     return (
       <div className="min-h-screen flex items-center justify-center text-center">
         <div>
@@ -181,7 +154,8 @@ const UploadPage = () => {
   }
 
   return (
-    <div className="w-full relative px-4 mx-auto py-10 text-white"
+    <div
+      className="w-full relative px-4 mx-auto py-10 text-white"
       style={{
         backgroundImage: `url(${bgHero})`,
         backgroundSize: 'cover',
@@ -189,14 +163,9 @@ const UploadPage = () => {
       }}
     >
       <div className="absolute inset-0 bg-black/20 z-0 backdrop-blur-sm" />
-
       <div className="relative z-10 max-w-3xl px-4 mx-auto py-10 text-white">
         <div className="flex items-center justify-between mb-6">
-          <img
-            src="/isoazul.png"
-            alt="Logo SRTV"
-            className="w-60 mb-6 drop-shadow-xl"
-            />
+          <img src="/isoazul.png" alt="Logo SRTV" className="w-60 mb-6 drop-shadow-xl" />
           <h1 className="text-3xl font-semibold">Admin SRTV</h1>
           <div className="text-right">
             <button
@@ -206,10 +175,9 @@ const UploadPage = () => {
               Cerrar sesión
             </button>
           </div>
-      </div>
+        </div>
 
-        {/* Fecha dinamica de revistas */}
-
+        {/* Fecha Jornada */}
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -237,13 +205,12 @@ const UploadPage = () => {
           <button
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
-            >
+          >
             Guardar fecha
           </button>
         </form>
 
-        {/* Form para modificar URL de transmision */}
-
+        {/* URL Transmisión */}
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -277,12 +244,8 @@ const UploadPage = () => {
           </button>
         </form>
 
-        {/* Form agregar revistas */}
-
-        <p className="text-xl mb-4">
-          Agregar nueva revista
-        </p>
-
+        {/* Agregar Revista */}
+        <p className="text-xl mb-4">Agregar nueva revista</p>
         <form onSubmit={handleAdd} className="space-y-4 mb-10">
           <input
             type="text"
@@ -291,7 +254,7 @@ const UploadPage = () => {
             placeholder="Título de la revista"
             className="w-full p-3 rounded bg-neutral-800 text-white"
             required
-            />
+          />
           <input
             type="text"
             value={id_archivo}
@@ -308,73 +271,70 @@ const UploadPage = () => {
           </button>
         </form>
 
+        {/* Lista de revistas */}
         <p className="text-xl mb-4">
           Total revistas: <span className="font-bold text-yellow-400">{revistas.length}</span>
         </p>
-
         <div className="space-y-4">
-  {revistas.map((r, index) => (
-    <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
-      <div>
-        <p className="font-bold">
-          <span className="text-yellow-400 mr-2">#{index + 1}</span>
-
-          {editandoId === r.id ? (
-            <input
-            type="text"
-            className="bg-neutral-700 text-white px-2 py-1 rounded w-full"
-            value={nuevoTitulo}
-            onChange={(e) => setNuevoTitulo(e.target.value)}
-            />
-          ) : (
-            r.titulo
-          )}
-        </p>
-
-        <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
-      </div>
-
-      <div className="flex gap-2">
-        {editandoId === r.id ? (
-          <>
-            <button
-              onClick={() => handleUpdateTitulo(r.id, nuevoTitulo)}
-              className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
-              >
-              Guardar
-            </button>
-            <button
-              onClick={() => {
-                setEditandoId(null);
-                setNuevoTitulo('');
-              }}
-              className="bg-gray-600 hover:bg-gray-700 px-3 py-1 rounded text-white text-sm"
-              >
-              Cancelar
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => {
-                setEditandoId(r.id);
-                setNuevoTitulo(r.titulo);
-              }}
-              className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-white text-sm"
-              >
-              Editar
-            </button>
-            <button
-              onClick={() => handleDelete(r.id)}
-              className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-sm"
-              >
-              Eliminar
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  ))}
+          {revistas.map((r, index) => (
+            <div key={r.id} className="flex items-center justify-between bg-neutral-800 p-4 rounded-lg">
+              <div>
+                <p className="font-bold uppercase">
+                  <span className="text-yellow-400 mr-2">#{index + 1}</span>
+                  {editandoId === r.id ? (
+                    <input
+                      type="text"
+                      className="bg-neutral-700 text-white px-2 py-1 rounded w-full"
+                      value={nuevoTitulo}
+                      onChange={(e) => setNuevoTitulo(e.target.value)}
+                    />
+                  ) : (
+                    r.titulo
+                  )}
+                </p>
+                <p className="text-neutral-400 text-sm">{r.id_archivo}</p>
+              </div>
+              <div className="flex gap-2">
+                {editandoId === r.id ? (
+                  <>
+                    <button
+                      onClick={() => handleUpdateTitulo(r.id, nuevoTitulo)}
+                      className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditandoId(null);
+                        setNuevoTitulo('');
+                      }}
+                      className="bg-gray-600 hover:bg-gray-700 px-3 py-1 rounded text-white text-sm"
+                    >
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setEditandoId(r.id);
+                        setNuevoTitulo(r.titulo);
+                      }}
+                      className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-white text-sm"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(r.id)}
+                      className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-sm"
+                    >
+                      Eliminar
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
