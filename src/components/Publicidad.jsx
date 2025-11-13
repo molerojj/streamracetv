@@ -36,7 +36,7 @@ const Publicidad = () => {
                         <Megaphone className="text-custom-blue mb-2" size={32} />
                         <p className="text-sm text-neutral-400">Espacio disponible</p>
                         <p className="text-xl font-semibold mt-1">Tu publicidad</p>
-                        <a href="https://wa.link/8g3t92" className="mt-6 bg-custom-blue hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                        <a href="https://wa.link/8g3t92" target='_blank' className="mt-6 bg-custom-blue text-white font-bold py-2 px-6 rounded-lg transition-all hover:scale-105 active:scale-95">
                             Contratar
                         </a>
                     </div>
@@ -74,7 +74,7 @@ const Publicidad = () => {
                             {publicidad.etiqueta2}
                         </p>
                         <p className="text-xl font-bold mb-4 text-center mt-3">{publicidad.cta}</p>
-                        <a href={publicidad.link} target='_blank' className="bg-custom-red hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                        <a href={publicidad.link} target='_blank' className="bg-custom-red text-white font-bold py-2 px-6 rounded-lg transition-all hover:scale-105 active:scale-95">
                             Contáctanos
                         </a>
                     </div>

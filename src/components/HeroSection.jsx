@@ -35,7 +35,7 @@ const HeroSection = () => {
             href="/transmision"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-custom-purple text-white inline-flex items-center gap-2 py-5 px-7 rounded-md hover:bg-blue-800 transition"
+            className="bg-custom-purple text-white inline-flex items-center gap-2 py-5 px-7 rounded-md  transition-all hover:scale-105 active:scale-95"
           >
             <Radio size={20} className="animate-pulse text-white" />
             Ver transmisión en vivo

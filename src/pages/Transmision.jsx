@@ -115,7 +115,7 @@ const Transmision = () => {
                 href="https://wa.link/8g3t92"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-4 bg-custom-red hover:bg-blue-800 text-white font-bold text-lg rounded-xl transition duration-500 gap-2 shadow-lg"
+                className="inline-flex items-center px-6 py-4 bg-custom-red text-white font-bold text-lg rounded-xl transition-all hover:scale-105 active:scale-95 duration-500 gap-2 shadow-lg"
               >
                 APUESTA AHORA
                 <ArrowRight className="w-5 h-5" />
@@ -155,7 +155,7 @@ const Transmision = () => {
                 href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-custom-purple text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+                className="flex items-center justify-center gap-2 bg-custom-purple text-white font-semibold py-2 px-4 rounded-lg  transition-all hover:scale-105 active:scale-95"
               >
                 <Download size={20} />
                 Descargar
@@ -170,7 +170,7 @@ const Transmision = () => {
       <div className="mt-20 flex justify-center">
         <Link
           to="/"
-          className="inline-flex items-center px-6 py-4 bg-custom-blue hover:bg-blue-700 text-white font-bold text-lg rounded-xl transition duration-500 gap-2 shadow-lg"
+          className="inline-flex items-center px-6 py-4 bg-custom-blue text-white font-bold text-lg rounded-xl transition-all hover:scale-105 active:scale-95 duration-500 gap-2 shadow-lg"
         >
           <ArrowLeft className="w-5 h-5" />
           Volver a pagina principal

@@ -23,7 +23,7 @@ const Footer = () => {
                      PARADAS ENTRE TERCIOS - DEPORTES - GANADORES.
                 </p>
             <div className="mt-10">
-                <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" target='_blank' className="inline-flex items-center px-6 py-4 bg-custom-red hover:bg-blue-800 text-white font-bold text-lg rounded-xl transition duration-500 gap-2 shadow-lg">
+                <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" target='_blank' className="inline-flex items-center px-6 py-4 bg-custom-red text-white font-bold text-lg rounded-xl transition-all hover:scale-105 active:scale-95 duration-500 gap-2 shadow-lg">
                     ÚNETE A EL GRAN RUNNER
                     <ArrowRight className="w-5 h-5" />
                 </a>

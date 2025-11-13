@@ -29,8 +29,8 @@ const Navbar = () => {
                     ))}
                 </ul>
                 <div className="hidden lg:flex justify-center space-x-12 items-center">
-                    <a href="https://wa.link/8g3t92" target='_blank' className="py-2 px-3 border rounded-md">Contáctanos</a>
-                    <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" target='_blank' className="bg-custom-purple py-2 px-3 rounded-md">Únete al canal de WhatsApp</a>
+                    <a href="https://wa.link/8g3t92" target='_blank' className="py-2 px-3 border rounded-md transition-all hover:scale-105 active:scale-95">Contáctanos</a>
+                    <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" target='_blank' className="bg-custom-purple py-2 px-3 rounded-md transition-all hover:scale-105 active:scale-95">Únete al canal de WhatsApp</a>
                     <Link to="/upload" target="_blank" title="Panel Admin">
                     <div className="p-2 rounded-full hover:bg-neutral-800 transition-colors">
                         <svg
@@ -66,8 +66,8 @@ const Navbar = () => {
                         ))}
                     </ul>
                     <div className="flex space-x-6">
-                        <a href="https://wa.link/8g3t92" className="py-2 px-3 border rounded-md">Contáctanos</a>
-                        <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" className="bg-custom-purple py-2 px-3 rounded-md">Únete al canal de WhatsApp</a>
+                        <a href="https://wa.link/8g3t92" target="_blank" className="py-2 px-3 border rounded-md transition-all hover:scale-105 active:scale-95">Contáctanos</a>
+                        <a href="https://chat.whatsapp.com/JXdLHJviwpTGOm1lw7jbxb?mode=wwc" target="_blank" className="bg-custom-purple py-2 px-3 rounded-md transition-all hover:scale-105 active:scale-95">Únete al canal de WhatsApp</a>
                     </div>
                 </div>
             )}

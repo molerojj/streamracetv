@@ -9,6 +9,7 @@ const Home = () => {
   return (
     <>
       <HeroSection />
+      
       <div className="max-w-7xl mx-auto pt-20 px-6 scroll-smooth">
         <div id="servicios">
           <Services />
