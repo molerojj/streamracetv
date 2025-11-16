@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MessageCircle, PhoneCall, Megaphone } from 'lucide-react';
-import publicidadData from '../data/publicidad.json';
+import publicidadData from '../data/publicidad.js';
 import imagenes from '../constants/publicidadMap';
 import espacios from '../constants/espaciosPublicidad.jsx';
 
