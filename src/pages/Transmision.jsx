@@ -135,30 +135,30 @@ const Transmision = () => {
             ? formatFechaJornada(fechaJornada)
             : 'Cargando...'}
         </p>
-<ul className="space-y-4 max-w-2xl mx-auto">
-  {revistas.map((file, index) => (
-    <li
-      key={index}
-      className="flex items-center justify-between gap-3 bg-neutral-900/70 p-2 rounded-xl border border-white/10 shadow-md"
-    >
-      {/* Título */}
-      <span className="text-white font-medium text-base sm:text-lg">
-        {file.titulo}
-      </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {revistas.map((file, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between gap-3 bg-neutral-900/70 p-3 rounded-xl border border-white/10 shadow-md"
+            >
+              {/* Título */}
+              <span className="text-white font-medium text-sm sm:text-base truncate">
+                {file.titulo}
+              </span>
 
-      {/* Botón de descarga */}
-      <a
-        href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 bg-custom-purple text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg transition-transform hover:scale-105 active:scale-95"
-      >
-        <Download size={18} />
-        Descargar
-      </a>
-    </li>
-  ))}
-</ul>
+              {/* Botón de descarga */}
+              <a
+                href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-custom-purple text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg transition-transform hover:scale-105 active:scale-95"
+              >
+                <Download size={18} />
+                Descargar
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Botón para regresar al inicio */}
