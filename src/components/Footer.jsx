@@ -4,7 +4,7 @@ import bgHorses from '../assets/horses.jpg';
 
 const Footer = () => {
   return (
-    <footer className="relative mt-20 py-24 px-6 text-white text-center overflow-hidden" 
+    <footer className="relative mt-4 sm:mt-20 py-12 sm:py-24 px-6 text-white text-center overflow-hidden" 
         style={{
         backgroundImage: `url(${bgHorses})`,
         backgroundSize: 'cover',

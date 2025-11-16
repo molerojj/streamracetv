@@ -135,39 +135,34 @@ const Transmision = () => {
             ? formatFechaJornada(fechaJornada)
             : 'Cargando...'}
         </p>
-        <div className="flex flex-wrap justify-center gap-8">
-          {revistas.map((file, index) => (
-          <div
-            key={index}
-            className="relative w-full max-w-[200px] min-h-[210px] bg-neutral-900/70 p-6 rounded-2xl border border-white/10 shadow-lg overflow-hidden flex flex-col justify-between"
-          >
-            {/* Fondo decorativo en capa atrás */}
-            <div className="absolute inset-0 bg-[url('/isoazul.png')] bg-center bg-no-repeat bg-contain opacity-30 pointer-events-none z-0" />
+<ul className="space-y-4 max-w-2xl mx-auto">
+  {revistas.map((file, index) => (
+    <li
+      key={index}
+      className="flex items-center justify-between gap-3 bg-neutral-900/70 p-2 rounded-xl border border-white/10 shadow-md"
+    >
+      {/* Título */}
+      <span className="text-white font-medium text-base sm:text-lg">
+        {file.titulo}
+      </span>
 
-            {/* Contenido */}
-            <div className="relative z-10 flex flex-col justify-between flex-1">
-              <div className="mb-4">
-                <h3 className="text-xl font-bold uppercase text-center leading-tight break-words">
-                  {file.titulo}
-                </h3>
-              </div>
-              <a
-                href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-custom-purple text-white font-semibold py-2 px-4 rounded-lg  transition-all hover:scale-105 active:scale-95"
-              >
-                <Download size={20} />
-                Descargar
-              </a>
-            </div>
-          </div>
-          ))}
-        </div>
+      {/* Botón de descarga */}
+      <a
+        href={`https://drive.google.com/uc?export=download&id=${file.id_archivo}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 bg-custom-purple text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg transition-transform hover:scale-105 active:scale-95"
+      >
+        <Download size={18} />
+        Descargar
+      </a>
+    </li>
+  ))}
+</ul>
       </div>
 
       {/* Botón para regresar al inicio */}
-      <div className="mt-20 flex justify-center">
+      <div className="mt-14 sm:mt-20 flex justify-center">
         <Link
           to="/"
           className="inline-flex items-center px-6 py-4 bg-custom-blue text-white font-bold text-lg rounded-xl transition-all hover:scale-105 active:scale-95 duration-500 gap-2 shadow-lg"
@@ -177,7 +172,7 @@ const Transmision = () => {
         </Link>
       </div>
       
-      <div className='mt-20' />
+      <div className="mt-12 sm:mt-20" />
       <Bannerpublicidad />
 
     </div>

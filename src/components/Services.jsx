@@ -2,12 +2,11 @@ import React from 'react'
 import { checklistItems } from '../constants'
 
 
-
 const Services = () => {
     const firstHalf = checklistItems.slice(0, Math.ceil(checklistItems.length / 2));
     const secondHalf = checklistItems.slice(Math.ceil(checklistItems.length / 2));
   return (
-    <div className='mt-20 mb-20'>
+    <div className='sm:mb-20'>
         <h2 className='text-3xl sm:text-5xl lg:text-6xl text-center mt-6 tracking-wide'>Que te ofrece {" "}
             <span className='bg-custom-purple text-transparent bg-clip-text'> Stream Race TV</span>
         </h2>
