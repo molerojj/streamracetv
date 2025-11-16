@@ -10,7 +10,7 @@ const Home = () => {
     <>
       <HeroSection />
       
-      <div className="max-w-7xl mx-auto pt-20 px-6 scroll-smooth">
+      <div className="max-w-7xl mx-auto pt-20 px-2 scroll-smooth">
         <div id="servicios">
           <Services />
         </div>
@@ -18,7 +18,7 @@ const Home = () => {
 
       <Bannerpublicidad />
       
-      <div className="max-w-7xl mx-auto pt-20 px-6 scroll-smooth">
+      <div className="max-w-7xl mx-auto pt-6 sm:pt-12 px-6 scroll-smooth">
         <div id="publicidad">
           <Publicidad />
         </div>
