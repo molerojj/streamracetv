@@ -93,7 +93,7 @@ const Transmision = () => {
 
       {/* PUBLICIDAD RUNNER*/}
 
-        <div className="w-full max-w-7xl mx-auto px-6 py-16 flex flex-col lg:flex-row items-center gap-12">
+        <div className="w-full max-w-7xl mx-auto  py-16 flex flex-col lg:flex-row items-center gap-12">
           {/* Imagen del lado izquierdo */}
           <div className="flex-shrink-0">
             <img src={logoRunner} alt="El Gran Runner" className="w-40 sm:w-52 lg:w-64 xl:w-72" />
@@ -126,7 +126,7 @@ const Transmision = () => {
 
       {/* Archivos PDF para descargar */}
 
-      <div className="mt-20">
+      <div className="mt-18">
         <h2 className="text-3xl font-semibold mb-4 text-center">
         Revistas de la jornada
         </h2>
