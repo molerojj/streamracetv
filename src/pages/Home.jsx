@@ -19,7 +19,7 @@ const Home = () => {
       <Bannerpublicidad />
       
       <div className="max-w-7xl mx-auto pt-6 sm:pt-12 px-6">
-        <div id="publicidad">
+        <div id="publicidad" style={{ display: 'block' }}>
           <Publicidad />
         </div>
       </div>
