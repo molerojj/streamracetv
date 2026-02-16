@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import logoRunner from '../assets/logo_runner.png'
 import Bannerpublicidad from '../components/Bannerpublicidad'
+import Hls from 'hls.js';
 
 import { collection, onSnapshot, doc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -12,6 +13,7 @@ const Transmision = () => {
 
   const [revistas, setRevistas] = useState([]);
   const [fechaJornada, setFechaJornada] = useState('');
+  const [urlTransmision, setUrlTransmision] = useState('');
 
   const formatFechaJornada = (fecha) => {
     const fechaObj = new Date(`${fecha}T12:00:00`);
@@ -23,8 +25,6 @@ const Transmision = () => {
     });
     return formato.charAt(0).toUpperCase() + formato.slice(1);
   };
-  
-  const [urlTransmision, setUrlTransmision] = useState('');
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'config', 'url_transmision'), (docSnap) => {
@@ -34,6 +34,23 @@ const Transmision = () => {
       });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!urlTransmision) return;
+
+    const video = document.getElementById('video-element');
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(urlTransmision);
+      hls.attachMedia(video);
+      return () => {
+          hls.destroy();
+        };
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = urlTransmision;
+    }
+  }, [urlTransmision]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'config', 'fecha_jornada'), (docSnap) => {
@@ -78,17 +95,27 @@ const Transmision = () => {
       <div className="w-full aspect-video max-h-[650px] flex items-center justify-center relative">
         <div className="absolute inset-0 rounded-2xl border-4 border-transparent bg-gradient-to-br from-blue-500 to-purple-700 opacity-40 transition-all duration-500 z-0 blur-3xl" />
         <div className="absolute inset-0 rounded-2xl border border-blue-800 z-10"></div>
-          <iframe
-            src={urlTransmision}
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            scrolling="no"
-            title="Transmisión en vivo"
-            className="w-full h-full rounded-2xl z-20"
-          />
+          {urlTransmision.endsWith('.m3u8') ? (
+            <video
+              id="video-element"
+              className="w-full h-full rounded-2xl z-20"
+              controls
+              autoPlay
+              muted
+            />
+          ) : (
+            <iframe
+              src={urlTransmision}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              scrolling="no"
+              title="Transmisión en vivo"
+              className="w-full h-full rounded-2xl z-20"
+            />
+          )}
       </div>
 
       {/* PUBLICIDAD RUNNER*/}
