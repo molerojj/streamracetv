@@ -29,9 +29,9 @@ const Transmision = () => {
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'config', 'url_transmision'), (docSnap) => {
       if (docSnap.exists()) {
-      setUrlTransmision(docSnap.data().valor);
+        setUrlTransmision(docSnap.data().valor);
       }
-      });
+    });
     return () => unsubscribe();
   }, []);
 
@@ -55,22 +55,21 @@ const Transmision = () => {
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'config', 'fecha_jornada'), (docSnap) => {
       if (docSnap.exists()) {
-      setFechaJornada(docSnap.data().valor);
+        setFechaJornada(docSnap.data().valor);
       }
-      });
+    });
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-  const unsubscribe = onSnapshot(collection(db, 'revistas'), (snapshot) => {
-  const docs = snapshot.docs.map(doc => ({
-  ...doc.data(),
-  id: doc.id,
-  }));
-  setRevistas(docs);
-  });
-
-  return () => unsubscribe();
+    const unsubscribe = onSnapshot(collection(db, 'revistas'), (snapshot) => {
+      const docs = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setRevistas(docs);
+    });
+    return () => unsubscribe();
   }, []);
 
   return (
