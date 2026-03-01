@@ -91,7 +91,7 @@ const Transmision = () => {
 
       {/* Contenedor de la transmision*/}
 
-      <div className="w-full aspect-video max-h-[650px] flex items-center justify-center relative">
+      <div className="w-full aspect-video flex items-center justify-center relative">
         <div className="absolute inset-0 rounded-2xl border-4 border-transparent bg-gradient-to-br from-blue-500 to-purple-700 opacity-40 transition-all duration-500 z-0 blur-3xl" />
         <div className="absolute inset-0 rounded-2xl border border-blue-800 z-10"></div>
           {urlTransmision.endsWith('.m3u8') ? (
