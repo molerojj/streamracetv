@@ -41,7 +41,10 @@ const Transmision = () => {
     const video = document.getElementById('video-element');
 
     if (Hls.isSupported()) {
-      const hls = new Hls();
+      const hls = new Hls({
+        liveSyncDurationCount: 2, // Ajuste para baja latencia
+        maxBufferLength: 5, // Ajuste del buffer
+      });
       hls.loadSource(urlTransmision);
       hls.attachMedia(video);
       return () => {
