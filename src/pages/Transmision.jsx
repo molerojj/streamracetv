@@ -42,7 +42,7 @@ const Transmision = () => {
 
     if (Hls.isSupported()) {
       const hls = new Hls({
-        liveSyncDurationCount: 2, // Ajuste para baja latencia
+        liveSyncDurationCount: 1, // Ajuste para baja latencia
         maxBufferLength: 5, // Ajuste del buffer
       });
       hls.loadSource(urlTransmision);
